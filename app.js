@@ -14,32 +14,41 @@ app.get("/", function(req, res){
 });
 
 app.post("/", function(req, res){
-    const firstN = req.body.firstN
-    const secondN = req.body.secondN
-    const email = req.body.email
-    const subscribingUser = {firstName: firstName, lastName: lastName, email: email}
-
-    const run = async () => {
-        const response = await client.lists.addListMember("4b80286443a2b71afffe58a667e7e30e-us14", {
-          email_address: subscribingUser.email,
-          status: "subscribed",
-          merge_fields: {
+    app.post("/", function(req, res){
+        const firstName = req.body.fName;
+        const lastName = req.body.lName;
+        const email = req.body.email;
+        console.log(firstName, lastName, email);
+       
+        const subscribingUser = {
+          firstName: firstName,
+          lastName: lastName,
+          email: email
+        }
+        const run = async () => {
+          const response = await client.lists.addListMember("1712e348ada", {
+            email_address: subscribingUser.email,
+            status: "subscribed",
+            merge_fields: {
               FNAME: subscribingUser.firstName,
               LNAME: subscribingUser.lastName
-          }
-        });
-        console.log(response);
-      };
-})
-
-
-var data = {
-    members: [
-        {
+            }
             
+          });
+       
+          if (response.statusCode===200){
+            
+            res.send("Succesfully subscribing to our Newsletters");
+          } else {
+            res.send("Subcribing failed, please try again");
+          }
+       
+          console.log(response);
         }
-    ]
-}
+        
+          run();
+      });
+})
 
 app.listen(2048, function(){
     console.log("Working on port 2048!");
